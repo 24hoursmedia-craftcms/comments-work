@@ -198,9 +198,10 @@ class Comment extends Element
         $actions[] = Craft::$app->getElements()->createAction(
             [
                 'type' => Edit::class,
-                'label' => Craft::t('redirect', 'Edit redirect'),
+                'label' => Craft::t('comments-work', 'Edit comment'),
             ]
         );
+
 
         // Delete
         $actions[] = DeleteComments::class;
