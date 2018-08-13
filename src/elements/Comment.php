@@ -304,6 +304,7 @@ class Comment extends Element
      */
     public function rules()
     {
+        return parent::rules();
         return [
             //['someAttribute', 'string'],
             //['someAttribute', 'default', 'value' => 'Some Default'],

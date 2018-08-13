@@ -49,6 +49,9 @@ Add the code below to your entry template. It renders a simple form with a title
 The code below renders the last 10 comments on your page
 
 ```twig
+{# @var commentsWork \twentyfourhoursmedia\commentswork\services\CommentsWorkService #}
+{% set commentsWork = craft.commentsWork.service %}
+
 <div id="comments">
     <p>{{  commentsWork.countComments(entry) }} comments</p>
     
