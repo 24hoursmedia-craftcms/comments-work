@@ -1,0 +1,44 @@
+{
+    "name": "twentyfourhoursmedia/comments-work",
+    "description": "An easy to use comment plugin for Craft CMS 3",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "comments work",
+        "comments"
+    ],
+    "support": {
+        "docs": "https://github.com/24hoursmedia-craftcms/comments-work/blob/master/README.md",
+        "issues": "https://github.com/24hoursmedia-craftcms/comments-work/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "24hoursmedia",
+            "homepage": "https://www.24hoursmedia.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "twentyfourhoursmedia\\commentswork\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Comments Work",
+        "handle": "comments-work",
+        "hasCpSettings": true,
+        "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/24hoursmedia-craftcms/comments-work/master/CHANGELOG.md",
+        "components": {
+            "commentsWorkService": "twentyfourhoursmedia\\commentswork\\services\\CommentsWorkService"
+        },
+        "class": "twentyfourhoursmedia\\commentswork\\CommentsWork"
+    }
+}
