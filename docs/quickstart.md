@@ -14,15 +14,21 @@ Assuming you have an 'entry', you can add comment forms and lists as in the exam
 Add the code below to your entry template. It renders a simple form with a title and comment field, and
 'signs' the form so malicious users cannot submit comments to arbitrary content.
 
+Bootstrap 4 example:
 
 ```twig
-
 {# @var commentsWork \twentyfourhoursmedia\commentswork\services\CommentsWorkService #}
 {% set commentsWork = craft.commentsWork.service %}
 
 {% if not currentUser and not commentsWork.allowAnonymous(entry) %}
     <p>Anonymous commenting is not allowed. Please login.</p>
 {% else %}
+
+    <div class="card bg-light"><div class="card-header">
+            Leave a comment
+        </div>
+        <div class="card-body">
+
     <form method="post" action="{{ url('/actions/comments-work/default/post-comment') }}">
         {{ csrfInput() }}
         {{ signCommentForm(entry) }}
@@ -31,53 +37,65 @@ Add the code below to your entry template. It renders a simple form with a title
         <input name="siteId" value="{{ entry.siteId }}" type="hidden"/>
         <input name="commentFormat" value="text" type="hidden"/>
 
-        <h3><label for="comment-title">Title</label></h3>
-        <input name="title" id="comment-title"/>
-
-        <h3><label for="comment-content">Comment</label></h3>
-        <textarea name="comment" rows="5" id="comment-content"></textarea>
+        <div class="form-group">
+            <label for="comment-title">Title</label>
+            <input name="title" id="comment-title" type="text" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="comment-content">Comment</label>
+            <textarea name="comment" rows="5" id="comment-content" class="form-control"></textarea>
+        </div>
 
         <div>
-            <input type="submit"/>
+            <input type="submit" class="btn btn-primary" value="Post comment"/>
         </div>
     </form>
+        </div>
+    </div>
 {% endif %}
-
 ```
 
 ### Displaying comments
 
-The code below renders the last 10 comments on your page
+The code below renders the last 10 comments on your page.
+
+Bootstrap 4 example:
 
 ```twig
 {# @var commentsWork \twentyfourhoursmedia\commentswork\services\CommentsWorkService #}
 {% set commentsWork = craft.commentsWork.service %}
 
 <div id="comments">
+    <br/>
     <p>{{  commentsWork.countComments(entry) }} comments</p>
-    
+
     {% set comments = commentsWork.fetchComments(entry, 0, 10) %}
     {% for comment in comments %}
         {# @var comment \twentyfourhoursmedia\commentswork\models\CommentModel #}
-        <div class="comment">
-            {%- if comment.title is not empty %}
-                <h3 class="comment-title">{{ comment.title }}</h3>
-            {% endif -%}
-            {%- if comment.comment is not empty %}
-                <div class="comment-content">
-                {{ comment | commentAsHtml }}
+        <div class="card card bg-light">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid" width="64">
+                        <p class="text-secondary text-center">{{ comment.dateCreated | date }} {{ comment.dateCreated | date('H:i') }}</p>
+                    </div>
+                    <div class="col-md-10">
+                        {%- if comment.user %}<p><a href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>{{ comment.user.friendlyName }}</strong></a></p>{% endif -%}
+                        {%- if comment.title is not empty %}
+                            <p><strong>{{ comment.title }}</strong></p>
+                        {% endif -%}
+                        {%- if comment.comment is not empty %}
+                            <p>
+                                {{ comment | commentAsHtml }}
+                            </p>
+                        {% endif -%}
+
+
+                    </div>
                 </div>
-            {% endif -%}
-            <div>
-                <small>
-                {%- if comment.user %}
-                    {{ comment.user.friendlyName }},
-                {% endif -%}
-        
-                {{ comment.dateCreated | date }} {{ comment.dateCreated | date('H:i') }}
-                </small>
             </div>
         </div>
+        <br/>
     {% endfor %}
 </div>
 ```
