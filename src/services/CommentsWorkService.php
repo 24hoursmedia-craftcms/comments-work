@@ -81,8 +81,15 @@ class CommentsWorkService extends Component
     }
 
     /**
+     * Saves the comment model to an element
+     * Returns the saved element on success, or false otherwise.
+     *
      * @api
      * @param CommentModel $model
+     * @return bool|Comment
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function saveModel(CommentModel $model)
     {
@@ -95,7 +102,8 @@ class CommentsWorkService extends Component
         $comment->title = $model->title;
         $comment->comment = $model->comment;
         $comment->commentFormat = $model->commentFormat;
-        return Craft::$app->getElements()->saveElement($comment, false, false);
+        $success = Craft::$app->getElements()->saveElement($comment, false, false);
+        return $success ? $comment : false;
     }
 
     /**
@@ -202,4 +210,69 @@ class CommentsWorkService extends Component
         ];
 
     }
+
+    const FLASHMESSAGE_KEY = '_comment_post';
+    const FLASHMESSAGE_TTL = 20; // number of seconds that a flash message stays valid
+
+    /**
+     * Create a message from a template
+     * @param array $options
+     * @return array
+     */
+    private function createFlashMessage($options = []) {
+        return array_merge([
+            'error' => null,
+            'expires' => null,
+            'status' => null
+        ], $options);
+    }
+
+    /**
+     * Set a flash message for the user indicating success
+     * @internal
+     * @param Comment $element
+     */
+    public function setSuccessFlashMessage(Comment $element)
+    {
+        $message = $this->createFlashMessage([
+            'error' => false,
+            'expires' => time() + self::FLASHMESSAGE_TTL,
+            'status' => $element->status
+        ]);
+        $session = Craft::$app->getSession()->setFlash(self::FLASHMESSAGE_KEY, $message, true);
+    }
+
+    /**
+     * Set a flash message for the user indicating success
+     * @internal
+     * @param Comment $element
+     */
+    public function setErrorFlashMessage()
+    {
+        $message = $this->createFlashMessage([
+            'error' => true,
+            'expires' => time() + self::FLASHMESSAGE_TTL
+        ]);
+        $session = Craft::$app->getSession()->setFlash(self::FLASHMESSAGE_KEY, $message, true);
+    }
+
+    /**
+     * Checks the user session is a comment has just been posted
+     * @api
+     */
+    public function checkJustPosted()
+    {
+        $message = Craft::$app->getSession()->getFlash(self::FLASHMESSAGE_KEY, null, true);
+        if (!is_array($message)) {
+            return false;
+        }
+        // feed through creator to ensure all keys are set
+        $message = $this->createFlashMessage($message);
+        // expired?
+        if (time() > $message['expires']) {
+            return false;
+        }
+        return $message;
+    }
+
 }

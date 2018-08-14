@@ -85,9 +85,20 @@ class DefaultController extends Controller
 
         // do not post empty content
         $valid = trim($model->title) || trim($model->comment);
+
+        $resultCommentElement = null;
         if ($valid) {
-            $commentsWork->saveModel($model);
+            $resultCommentElement = $commentsWork->saveModel($model);
         }
+
+        // if the comment has been saved we have a comment element
+        // set a flash message through the service
+        if ($resultCommentElement) {
+            $commentsWork->setSuccessFlashMessage($resultCommentElement);
+        } else {
+            $commentsWork->setErrorFlashMessage();
+        }
+
         if (!$redirect) {
             return $this->redirectToPostedUrl();
         } else {
