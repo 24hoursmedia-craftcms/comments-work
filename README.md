@@ -10,14 +10,9 @@ This is a commercial CraftCMS Plugin ([license](LICENSE.md)).
 
 ## Documentation
 
-Read the [quickstart documentation](docs/quickstart.md) to add a form and comments to your page within minutes.
+Read the [documentation](http://io.24hoursmedia.com/comments-work) 
 
-
-    {% set comments = commentsWork.fetchComments(entry, 0, 5) %}
-    {% for comment in comments %}
-        <li>{{ comment.title }}</li>
-    {% endfor %}
-
+   
 ## Requirements
 
 This plugin requires Craft CMS 3.0 or later, and works best with the PRO edition.
