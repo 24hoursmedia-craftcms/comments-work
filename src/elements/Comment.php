@@ -389,6 +389,8 @@ class Comment extends Element
      */
     public function beforeDelete(): bool
     {
+        $record = CommentRecord::findOne($this->id);
+        $record->delete();
         return true;
     }
 

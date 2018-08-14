@@ -47,9 +47,9 @@ class DeleteComments extends ElementAction
     public function performAction(ElementQueryInterface $query): bool
     {
         try {
-            foreach ($query->all() as $redirect) {
+            foreach ($query->all() as $element) {
 
-            Craft::$app->getElements()->deleteElement($redirect);
+            Craft::$app->getElements()->deleteElement($element);
 
             }
         } catch (Exception $exception) {
