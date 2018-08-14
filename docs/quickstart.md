@@ -28,6 +28,7 @@ Add the code below to your entry template. It renders a simple form with a title
         {{ signCommentForm(entry) }}
         <input name="redirect" value="{{ craft.app.request.url }}#comments" type="hidden"/>
         <input name="elementId" value="{{ entry.id }}" type="hidden"/>
+        <input name="siteId" value="{{ entry.siteId }}" type="hidden"/>
         <input name="commentFormat" value="text" type="hidden"/>
 
         <h3><label for="comment-title">Title</label></h3>

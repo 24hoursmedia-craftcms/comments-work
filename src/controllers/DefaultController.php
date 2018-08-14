@@ -57,7 +57,8 @@ class DefaultController extends Controller
 
         $request = Craft::$app->getRequest();
         $redirect = $request->getParam('redirect');
-        $element = Craft::$app->elements->getElementById($request->getParam('elementId'));
+        $element = Craft::$app->elements->getElementById($request->getParam('elementId'),null,$request->getParam('siteId'));
+
         if (!$element) {
             throw new BadRequestHttpException('Element not found');
         }
@@ -77,7 +78,10 @@ class DefaultController extends Controller
         $model
             ->setTitle($request->getParam('title'))
             ->setComment($request->getParam('comment'))
-            ->setCommentFormat($request->getParam('commentFormat', 'text'));
+            ->setCommentFormat($request->getParam('commentFormat', 'text'))
+
+
+        ;
 
         // do not post empty content
         $valid = trim($model->title) || trim($model->comment);

@@ -71,6 +71,16 @@ class CommentModel extends Model
         return $this;
     }
 
+    /**
+     * @param mixed $siteId
+     * @return CommentModel
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+        return $this;
+    }
+
     public function isAnonymous()
     {
         return !$this->userId;

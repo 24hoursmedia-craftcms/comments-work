@@ -46,7 +46,7 @@ class CommentsWorkService extends Component
      */
     public function allowAnonymous(Element $element)
     {
-       return (bool)CommentsWork::$plugin->getSettings()->allowAnonymous;
+        return (bool)CommentsWork::$plugin->getSettings()->allowAnonymous;
     }
 
 
@@ -86,6 +86,7 @@ class CommentsWorkService extends Component
      */
     public function saveModel(CommentModel $model)
     {
+
         $comment = new Comment();
         $comment->userId = $model->userId;
         $comment->siteId = $model->siteId;
@@ -103,17 +104,21 @@ class CommentsWorkService extends Component
      * @param array $options
      * @return int
      */
-    public function countComments($elementOrelementId, $options = [])
+    public function countComments(Element $element = null, $options = [])
     {
         static $defaultOptions = [
-            'status' => CommentModel::STATUS_APPROVED
+            'status' => CommentModel::STATUS_APPROVED,
+            'all_sites' => false
         ];
         $options = array_merge($defaultOptions, $options);
 
-        $elementId = is_numeric($elementOrelementId) ? $elementOrelementId : $elementOrelementId ? $elementOrelementId->id : null;
+
         $conditions = [];
-        if ($elementId !== null) {
-            $conditions['elementId'] = $elementId;
+        if ($element) {
+            $conditions['elementId'] = $element->id;
+        }
+        if (!$options['all_sites'] && $element) {
+            $conditions['siteId'] = $element->siteId;
         }
         if ($options['status'] !== CommentModel::STATUS_ALL) {
             $conditions['status'] = $options['status'];
@@ -127,26 +132,28 @@ class CommentsWorkService extends Component
 
     /**
      * @api
-     * @param $elementOrelementId
+     * @param Element $element
      * @param int $first
      * @param int $count
      * @param array $options
      * @return array
      */
-    public function fetchComments($elementOrelementId, $first = 0, $count = 10, $options = [])
+    public function fetchComments(Element $element, $first = 0, $count = 10, $options = [])
     {
         static $defaultOptions = [
-            'status' => CommentModel::STATUS_APPROVED
+            'status' => CommentModel::STATUS_APPROVED,
+            'all_sites' => false
         ];
         $options = array_merge($defaultOptions, $options);
 
-        $elementId = is_numeric($elementOrelementId) ? $elementOrelementId : $elementOrelementId ? $elementOrelementId->id : null;
+
         $conditions = [];
-        if ($elementId !== null) {
-            $conditions['elementId'] = $elementId;
-        }
+        $conditions['elementId'] = $element->id;
         if ($options['status'] !== CommentModel::STATUS_ALL) {
             $conditions['status'] = $options['status'];
+        }
+        if (!$options['all_sites']) {
+            $conditions['siteId'] = $element->siteId;
         }
 
         $records = CommentRecord::find()
@@ -172,21 +179,22 @@ class CommentsWorkService extends Component
      */
     public function createFormSignature(Element $element)
     {
-        return sha1($element->id . '_' . $element->uid);
+        return sha1($element->id . '_' . $element->uid . '_' . $element->siteId);
     }
 
     /**
      * @param $id
      * @return Element|null|Comment|Comment[]
      */
-    public function findById($id) {
+    public function findById($id)
+    {
         return Comment::find()->enabledForSite(false)->id($id)->one();
     }
 
     public function getStatusOptions()
     {
         return [
-          Comment::STATUS_APPROVED => Comment::STATUS_APPROVED,
+            Comment::STATUS_APPROVED => Comment::STATUS_APPROVED,
             Comment::STATUS_PENDING => Comment::STATUS_PENDING,
             Comment::STATUS_SPAM => Comment::STATUS_SPAM,
             Comment::STATUS_TRASHED => Comment::STATUS_TRASHED,
