@@ -26,9 +26,9 @@ Add the code below to your entry template. It renders a simple form with a title
     <form method="post" action="{{ url('/actions/comments-work/default/post-comment') }}">
         {{ csrfInput() }}
         {{ signCommentForm(entry) }}
-        <input name="redirect" value="{{ craft.app.request.url }}#comments"/>
-        <input name="elementId" value="{{ entry.id }}"/>
-        <input name="commentFormat" value="text"/>
+        <input name="redirect" value="{{ craft.app.request.url }}#comments" type="hidden"/>
+        <input name="elementId" value="{{ entry.id }}" type="hidden"/>
+        <input name="commentFormat" value="text" type="hidden"/>
 
         <h3><label for="comment-title">Title</label></h3>
         <input name="title" id="comment-title"/>
