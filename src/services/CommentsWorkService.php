@@ -180,7 +180,7 @@ class CommentsWorkService extends Component
      * @return Element|null|Comment|Comment[]
      */
     public function findById($id) {
-        return Comment::findOne(['id' => $id]);
+        return Comment::find()->enabledForSite(false)->id($id)->one();
     }
 
     public function getStatusOptions()

@@ -52,77 +52,79 @@
 
 {# The content of the CP Section#}
 {% set content %}
-
-    <h2>Edit comment #{{ entry.id }}</h2>
-    {#
-    {% if comment.user.photoId %}
-        <div id="user-photo">
-            <img width="14" sizes="14px" srcset="{{ comment.user.getThumbUrl(14) }} 14w, {{ comment.user.getThumbUrl(28) }} 28w" alt="{{ comment.user.getName() }}">
-        </div>
-    {% endif %}
-    #}
-    <p class="textline">
-        {% set poster = entry.poster %}
-        {% if poster %}
-            <strong>Posted by</strong> <a href="{{ poster.cpEditUrl }}">{{ poster.friendlyName }}</a>,
+    {% if entry is empty %}
+        <h1>NOTFOUND</h1>
+    {% else %}
+        <h2>Edit comment #{{ entry.id }}</h2>
+        {#
+        {% if comment.user.photoId %}
+            <div id="user-photo">
+                <img width="14" sizes="14px" srcset="{{ comment.user.getThumbUrl(14) }} 14w, {{ comment.user.getThumbUrl(28) }} 28w" alt="{{ comment.user.getName() }}">
+            </div>
         {% endif %}
-        {{ entry.dateCreated | date }} {{ entry.dateCreated | date('H:i') }}
-        <br/>
-        {% set sourceElement = entry.sourceElement %}
-        {% if sourceElement.cpEditUrl %}
-            <strong>Entry:</strong> <a href="{{ sourceElement.cpEditUrl }}">{{ sourceElement.title }}</a>
-        {% else %}
-            <strong>Entry:</strong> {{ sourceElement.title }}
-        {% endif %}
+        #}
+        <p class="textline">
+            {% set poster = entry.poster %}
+            {% if poster %}
+                <strong>Posted by</strong> <a href="{{ poster.cpEditUrl }}">{{ poster.friendlyName }}</a>,
+            {% endif %}
+            {{ entry.dateCreated | date }} {{ entry.dateCreated | date('H:i') }}
+            <br/>
+            {% set sourceElement = entry.sourceElement %}
+            {% if sourceElement.cpEditUrl %}
+                <strong>Entry:</strong> <a href="{{ sourceElement.cpEditUrl }}">{{ sourceElement.title }}</a>
+            {% else %}
+                <strong>Entry:</strong> {{ sourceElement.title }}
+            {% endif %}
 
-    </p>
+        </p>
 
-    <p class="textline"></p>
-    {{ forms.selectField({
-        label: "Status"|t('comments-work'),
-        instructions: ""|t('comments-work'),
-        id: 'status',
-        name: 'status',
-        options: commentsWork.statusOptions,
-        value: entry.status,
-        toggle: true,
-        targetPrefix: '.statusCode-',
-        errors: entry.getErrors('status')
-    }) }}
+        <p class="textline"></p>
+        {{ forms.selectField({
+            label: "Status"|t('comments-work'),
+            instructions: ""|t('comments-work'),
+            id: 'status',
+            name: 'status',
+            options: commentsWork.statusOptions,
+            value: entry.status,
+            toggle: true,
+            targetPrefix: '.statusCode-',
+            errors: entry.getErrors('status')
+        }) }}
 
-    {{ forms.textField({
-        label: "Title"|t('comments-work'),
-        instructions: "Title of the comment"|t('comments-work'),
-        id: 'title',
-        class: 'ltr',
-        name: 'title',
-        value: entry.title,
-        errors: entry.getErrors('title'),
-        autofocus: true,
-        required: false
-    }) }}
-
-    <div class="field">
-        <div class="heading">
-            <label for="comment">Comment:</label>
-        </div>
-        {{ forms.textArea({
-            label: "Comment"|t('comments-work'),
-            instructions: "Comment"|t('comments-work'),
-            id: 'comment',
+        {{ forms.textField({
+            label: "Title"|t('comments-work'),
+            instructions: "Title of the comment"|t('comments-work'),
+            id: 'title',
             class: 'ltr',
-            name: 'comment',
-            value: entry.comment,
-            rows: 10,
-            errors: entry.getErrors('comment'),
+            name: 'title',
+            value: entry.title,
+            errors: entry.getErrors('title'),
             autofocus: true,
             required: false
         }) }}
-    </div>
+
+        <div class="field">
+            <div class="heading">
+                <label for="comment">Comment:</label>
+            </div>
+            {{ forms.textArea({
+                label: "Comment"|t('comments-work'),
+                instructions: "Comment"|t('comments-work'),
+                id: 'comment',
+                class: 'ltr',
+                name: 'comment',
+                value: entry.comment,
+                rows: 10,
+                errors: entry.getErrors('comment'),
+                autofocus: true,
+                required: false
+            }) }}
+        </div>
 
 
-    <hr/>
-
+        <hr/>
+    {% endif %}
 
 
 

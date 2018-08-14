@@ -26,6 +26,8 @@ class CommentQuery extends ElementQuery
      */
     public $commentStatus;
 
+    public $siteId;
+
 
     /**
      * @inheritdoc
@@ -92,7 +94,9 @@ class CommentQuery extends ElementQuery
         if ($this->commentStatus) {
             $this->subQuery->andWhere(Db::parseParam('cw_comments.status', $this->commentStatus));
         }
-
+        if ($this->siteId) {
+           // $this->subQuery->andWhere(Db::parseParam('cw_comments.siteId', $this->siteId));
+        }
 
         return parent::beforePrepare();
     }

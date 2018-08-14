@@ -1,6 +1,6 @@
 # Comments Work plugin for Craft CMS 3.x
 
-An easy to use comment plugin for Craft CMS 3.
+An easy to use and straightforwardc commentin plugin for Craft CMS 3.
 Simple and straightforward.
 
 Allow users to post comments to your content, and moderate it from the dashboard.
