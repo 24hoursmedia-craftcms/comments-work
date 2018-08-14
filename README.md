@@ -5,6 +5,8 @@ Simple and straightforward.
 
 Allow users to post comments to your content, and moderate it from the dashboard.
 
+This is a commercial CraftCMS Plugin ([license](LICENSE.md)).
+
 ## Documentation
 
 Read the [quickstart documentation](docs/quickstart.md) to add a form and comments to your page within minutes.
