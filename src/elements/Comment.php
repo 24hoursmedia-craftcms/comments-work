@@ -358,12 +358,12 @@ class Comment extends Element
      */
     public function afterSave(bool $isNew)
     {
-        // Get the redirect record
+        // Get the comment record
         if (!$isNew) {
             $record = CommentRecord::findOne($this->id);
 
             if (!$record) {
-                throw new \Exception('Invalid redirect ID: ' . $this->id);
+                throw new \Exception('Invalid comment ID: ' . $this->id);
             }
         } else {
             $record = new CommentRecord();
