@@ -56,13 +56,11 @@
 {% block sidebar %}
 
     <nav>
-        <ul>
-            {% if sources is not empty %}
-                <li class="heading"><span>Comment entries</span></li>
-                {% include "_elements/sources" %}
-            {% endif %}
-        </ul>
+        {% include "_elements/sources" %}
     </nav>
+
+    <div class="heading"><span></span></div>
+    <a class="customize-sources settings icon" title="{{ 'Customize sources'|t }}"></a>
 
 {% endblock %}
 
@@ -84,7 +82,7 @@
 
     <div class="elementindex">
         {% include "_elements/indexcontainer" with {
-            showSiteMenu: false
+            showSiteMenu: true
         } %}
     </div>
 
@@ -94,7 +92,7 @@
 {% block initJs %}
     Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
     context:        '{{ context }}',
-    storageKey:     'elementindex.{{ elementType }}',
+    storageKey:     'elementindex.{{ elementType|e("js") }}',
     criteria:       Craft.defaultIndexCriteria
     });
 {% endblock %}
