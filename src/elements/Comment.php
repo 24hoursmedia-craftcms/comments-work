@@ -112,7 +112,7 @@ class Comment extends Element
      */
     public static function hasTitles(): bool
     {
-        return true;
+        return false;
     }
 
 
@@ -218,8 +218,6 @@ class Comment extends Element
      */
     public static function find(): ElementQueryInterface
     {
-
-
         return new CommentQuery(static::class);
     }
 
@@ -238,7 +236,7 @@ class Comment extends Element
                 [
                     'key' => '*',
                     'label' => Craft::t('comments-work', 'All comments'),
-                    'criteria' => []
+                    'criteria' => ['commentStatus' => null]
                 ],
                 [
                     'key' => 'approved',
@@ -283,10 +281,7 @@ class Comment extends Element
      */
     public function getCpEditUrl()
     {
-
         return UrlHelper::cpUrl('comments-work/edit-comment?id=' . $this->id . '&siteId=' . $this->siteId);
-
-        return $url;
     }
 
     // Public Methods

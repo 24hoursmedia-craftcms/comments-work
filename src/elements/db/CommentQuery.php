@@ -3,9 +3,11 @@
 namespace twentyfourhoursmedia\commentswork\elements\db;
 
 use Craft;
+use craft\base\ElementInterface;
 use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use twentyfourhoursmedia\commentswork\elements\Comment;
 
 
 class CommentQuery extends ElementQuery
@@ -24,9 +26,14 @@ class CommentQuery extends ElementQuery
     /**
      * @var string|string[]|null The handle(s) that the resulting global sets must have.
      */
-    public $commentStatus;
+    public $commentStatus = Comment::STATUS_APPROVED;
 
     public $siteId;
+
+    /**
+     * @var array
+     */
+    protected $elements = [];
 
 
     /**
@@ -64,6 +71,24 @@ class CommentQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * @param $element  ElementInterface | int
+     */
+    public function element($element)
+    {
+        $ids = [];
+        $_elements = is_array($element) ? $element : [$element];
+        $_ids = array_map(function($el) {
+                if ($el instanceof ElementInterface) {
+                    return $el->getId();
+                } else {
+                    return $el;
+                }
+        }, $_elements);
+        $this->elements = array_merge($this->elements, $_ids);
+        return $this;
+    }
+
     // Protected Methods
     // =========================================================================
 
@@ -96,6 +121,15 @@ class CommentQuery extends ElementQuery
         }
         if ($this->siteId) {
            // $this->subQuery->andWhere(Db::parseParam('cw_comments.siteId', $this->siteId));
+        }
+        if ($this->elements) {
+
+            $values = array_unique(Db::prepareValuesForDb($this->elements));
+
+            $this->subQuery->andWhere(
+                'cw_comments.elementId IN (' . implode(',', $values) . ')'
+            );
+
         }
 
         return parent::beforePrepare();
