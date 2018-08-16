@@ -275,4 +275,13 @@ class CommentsWorkService extends Component
         return $message;
     }
 
+    /**
+     * @api
+     * @return \craft\elements\db\ElementQueryInterface|\twentyfourhoursmedia\commentswork\elements\db\CommentQuery
+     */
+    public function createElementQuery()
+    {
+        return Comment::find();
+    }
+
 }
