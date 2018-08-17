@@ -14,6 +14,7 @@ use craft\base\Element;
 use twentyfourhoursmedia\commentswork\CommentsWork;
 
 use Craft;
+use twentyfourhoursmedia\commentswork\elements\Comment;
 use twentyfourhoursmedia\commentswork\models\CommentModel;
 
 /**
@@ -75,12 +76,14 @@ class CommentsWorkTwigExtension extends \Twig_Extension
 
     /**
      * Formats a comment as html
-     * @param CommentModel $comment
+     * @param CommentModel | Comment $comment
      * @return string
      */
-    public function commentAsHtml(CommentModel $comment)
+    public function commentAsHtml($comment)
     {
-
+        if (!($comment instanceof CommentModel || $comment instanceof Comment)) {
+            throw new \Exception('Not a comment');
+        }
         $result = '';
         switch ($comment->commentFormat) {
             case CommentModel::FORMAT_PLAINTEXT:
@@ -88,10 +91,7 @@ class CommentsWorkTwigExtension extends \Twig_Extension
                 break;
             default:
                 return $comment->comment;
-
         }
-
-
         return $result;
     }
 

@@ -97,6 +97,19 @@ class Comment extends Element
     }
 
     /**
+     * Returns the poster of the comment
+     * @api
+     * @return User|null
+     */
+    public function getUser()
+    {
+        if (!$this->userId) {
+            return null;
+        }
+        return Craft::$app->users->getUserById($this->userId);
+    }
+
+    /**
      * @inheritdoc
      */
     public static function refHandle()

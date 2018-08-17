@@ -125,9 +125,9 @@ class CommentQuery extends ElementQuery
         if ($this->elements) {
 
             $values = array_unique(Db::prepareValuesForDb($this->elements));
-
+            $condition = 'cw_comments.elementId IN (' . implode(',', $values) . ')';
             $this->subQuery->andWhere(
-                'cw_comments.elementId IN (' . implode(',', $values) . ')'
+                $condition
             );
 
         }
