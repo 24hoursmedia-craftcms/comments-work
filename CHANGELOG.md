@@ -3,6 +3,7 @@
 ## 1.0.5
 ### Fixed
 - get the user object from comment element
+- twig filter for counting comments
 
 ## 1.0.4
 ### Added
