@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.0.5
+### Fixed
+- get the user object from comment element
+
 ## 1.0.4
 ### Added
 - Comment service exposes an element query to query for comments
