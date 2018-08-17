@@ -53,6 +53,7 @@ class CommentsWorkTwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('commentAsHtml', [$this, 'commentAsHtml']),
+            new \Twig_SimpleFilter('countComments', [$this, 'countComments']),
         ];
     }
 
@@ -61,12 +62,13 @@ class CommentsWorkTwigExtension extends \Twig_Extension
      *
      *      {% set this = someFunction('something') %}
      *
-    * @return array
+     * @return array
      */
     public function getFunctions()
     {
         return [
             new \Twig_SimpleFunction('commentAsHtml', [$this, 'commentAsHtml']),
+            new \Twig_SimpleFunction('countComments', [$this, 'countComments']),
             new \Twig_SimpleFunction('signCommentForm', [$this, 'signForm'], ['is_safe' => ['html']]),
         ];
     }
@@ -96,5 +98,10 @@ class CommentsWorkTwigExtension extends \Twig_Extension
     public function signForm(Element $element)
     {
         return '<input type="hidden" name="signature" value="' . CommentsWork::$plugin->commentsWorkService->createFormSignature($element) . '" />';
+    }
+
+    public function countComments($elementOrElementId)
+    {
+        return CommentsWork::$plugin->commentsWorkService->countComments($elementOrElementId);
     }
 }
