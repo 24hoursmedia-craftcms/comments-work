@@ -93,7 +93,7 @@ class Comment extends Element
      */
     public static function displayName(): string
     {
-        return Craft::t('comment', '');
+        return Craft::t('comments-work', 'comment');
     }
 
     /**
