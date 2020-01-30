@@ -199,6 +199,15 @@ class CommentsWorkService extends Component
         return Comment::find()->enabledForSite(false)->id($id)->one();
     }
 
+    /**
+     * @param $id
+     * @return Element|null|Comment|Comment[]
+     */
+    public function findAnyById($id)
+    {
+        return Comment::find()->enabledForSite(false)->id($id)->commentStatus(null)->one();
+    }
+
     public function getStatusOptions()
     {
         return [
