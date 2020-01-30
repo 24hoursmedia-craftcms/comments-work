@@ -1,5 +1,10 @@
 # Comments Work Changelog
 
+## 1.1.0
+
+### Modified
+- Craft 3.4 compatibility
+
 ## 1.0.5
 ### Fixed
 - get the user object from comment element

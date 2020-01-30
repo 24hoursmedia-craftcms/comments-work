@@ -34,7 +34,7 @@
 
 {# @var commentsWork \twentyfourhoursmedia\commentswork\services\CommentsWorkService #}
 {% set commentsWork = craft.commentsWork.service %}
-{% set entry = commentsWork.findById(craft.app.request.param('id')) %}
+{% set entry = commentsWork.findAnyById(craft.app.request.param('id')) %}
 
 {% set fullPageForm = true %}
 

@@ -73,6 +73,7 @@ class CommentQuery extends ElementQuery
 
     /**
      * @param $element  ElementInterface | int
+     * @return CommentQuery
      */
     public function element($element)
     {

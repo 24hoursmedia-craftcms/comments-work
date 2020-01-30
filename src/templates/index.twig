@@ -12,63 +12,26 @@
  * @since     1.0.0
  */
 #}
-
-{% extends "_layouts/cp" %}
-{% import "_includes/forms" as forms %}
-
-{% do view.registerAssetBundle("twentyfourhoursmedia\\commentswork\\assetbundles\\commentswork\\CommentsWorkAsset") %}
-{% do view.registerAssetBundle("twentyfourhoursmedia\\commentswork\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
-
 {# Link for the ? icon at the bottom of the page #}
 {% set docsUrl = "https://github.com/24hoursmedia-craftcms/comments-work/comments-work/blob/master/README.md" %}
-
 {# The title of this CP section #}
 {% set title = "Comments Work" %}
-
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('comments-work') %}
-
 {# Get a URL to an image in our AssetBundle #}
 {% set iconUrl = view.getAssetManager().getPublishedUrl('@twentyfourhoursmedia/commentswork/assetbundles/indexcpsection/dist', true) ~ '/img/Index-icon.svg' %}
-
-
 {# @var commentsWork \twentyfourhoursmedia\commentswork\services\CommentsWorkService #}
 {% set commentsWork = craft.commentsWork.service %}
-
-
-
-
-{#
-<img src="{{ iconUrl }}" height="64" width="64" />
-#}
-
-
 {% set elementType = 'twentyfourhoursmedia\\commentswork\\elements\\Comment' %}
 {% set elementInstance = craft.app.elements.createElement(elementType) %}
 {% set context = 'index' %}
 {% set sources = craft.app.elementIndexes.getSources(elementType, 'index') %}
 
+{% extends "_layouts/elementindex" %}
 
-{% block contextMenu %}
-    {% include "_elements/sitemenu" %}
-{% endblock %}
 
-{% block sidebar %}
-
-    <nav>
-        {% include "_elements/sources" %}
-    </nav>
-
-    <div class="heading"><span></span></div>
-    <a class="customize-sources settings icon" title="{{ 'Customize sources'|t }}"></a>
-
-{% endblock %}
-
-{# The content of the CP Section#}
 {% block content %}
     <h2>{{ "Latest comments"|t('comments-work') }}</h2>
-
-    <p class="textline"></p>
 
     {{ commentsWork.countComments(null, {status: 'ALL'}) }} total comments |
     {{ commentsWork.countComments(null, {status: 'APPROVED'}) }} approved comments |
@@ -77,24 +40,9 @@
     {{ commentsWork.countComments(null, {status: 'TRASHED'}) }} trash comments
 
     <p class="textline"></p>
-
-    <br/><br/>
-
-    <div class="elementindex">
-        {% include "_elements/indexcontainer" with {
-            showSiteMenu: true
-        } %}
+    <div style="clear: both"></div>
+    <div style="padding-top: 100px">
+    {{parent()}}
     </div>
 
-
 {% endblock %}
-
-{% block initJs %}
-    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
-    context:        '{{ context }}',
-    storageKey:     'elementindex.{{ elementType|e("js") }}',
-    criteria:       Craft.defaultIndexCriteria
-    });
-{% endblock %}
-
-{% js block('initJs') %}
