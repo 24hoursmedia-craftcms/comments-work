@@ -1,5 +1,10 @@
 # Comments Work Changelog
 
+## Unreleased
+
+### Added
+- return json result from a new submit endpoint for ajax requests (actions/comments-work/default/xhr-post-comment)
+
 ## 1.1.0
 
 ### Modified

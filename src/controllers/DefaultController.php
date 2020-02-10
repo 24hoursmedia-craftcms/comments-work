@@ -18,16 +18,6 @@ use twentyfourhoursmedia\commentswork\models\CommentModel;
 use yii\web\BadRequestHttpException;
 
 /**
- * Default Controller
- *
- * Generally speaking, controllers are the middlemen between the front end of
- * the CP/website and your plugin’s services. They contain action methods which
- * handle individual tasks.
- *
- * A common pattern used throughout Craft involves a controller action gathering
- * post data, saving it on a model, passing the model off to a service, and then
- * responding to the request appropriately depending on the service method’s response.
- *
  * Action methods begin with the prefix “action”, followed by a description of what
  * the method does (for example, actionSaveIngredient()).
  *
@@ -50,15 +40,19 @@ class DefaultController extends Controller
      */
     protected $allowAnonymous = ['post-comment'];
 
-
-    public function actionPostComment()
-    {
+    /**
+     * Handles submission
+     *
+     * @return bool|\twentyfourhoursmedia\commentswork\elements\Comment|null
+     * @throws BadRequestHttpException
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    private function handleSubmit() {
         $commentsWork = CommentsWork::$plugin->commentsWorkService;
-
         $request = Craft::$app->getRequest();
-        $redirect = $request->getParam('redirect');
         $element = Craft::$app->elements->getElementById($request->getParam('elementId'),null,$request->getParam('siteId'));
-
         if (!$element) {
             throw new BadRequestHttpException('Element not found');
         }
@@ -79,8 +73,6 @@ class DefaultController extends Controller
             ->setTitle($request->getParam('title'))
             ->setComment($request->getParam('comment'))
             ->setCommentFormat($request->getParam('commentFormat', 'text'))
-
-
         ;
 
         // do not post empty content
@@ -90,11 +82,31 @@ class DefaultController extends Controller
         if ($valid) {
             $resultCommentElement = $commentsWork->saveModel($model);
         }
+        return $resultCommentElement;
+    }
+
+    /**
+     * Handles normal posts, redirects after posting the comment.
+     *
+     * /actions/comments-work/default/post-comment
+     *
+     * @return \yii\web\Response
+     * @throws BadRequestHttpException
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function actionPostComment()
+    {
+        $commentsWork = CommentsWork::$plugin->commentsWorkService;
+        $request = Craft::$app->getRequest();
+        $redirect = $request->getParam('redirect');
+        $commentElement = $this->handleSubmit();
 
         // if the comment has been saved we have a comment element
         // set a flash message through the service
-        if ($resultCommentElement) {
-            $commentsWork->setSuccessFlashMessage($resultCommentElement);
+        if ($commentElement) {
+            $commentsWork->setSuccessFlashMessage($commentElement);
         } else {
             $commentsWork->setErrorFlashMessage();
         }
@@ -104,5 +116,29 @@ class DefaultController extends Controller
         } else {
             return $this->redirect($redirect);
         }
+    }
+
+    /**
+     * Posts a comment and returns a json object with a 'success' flag
+     *
+     * /actions/comments-work/default/xhr-post-comment
+     *
+     * @return \yii\web\Response
+     * @throws BadRequestHttpException
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function actionXhrPostComment()
+    {
+        $request = Craft::$app->getRequest();
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException('Not an ajax call');
+        }
+        $commentElement = $this->handleSubmit();
+        $dto = [
+            'success' => $commentElement !== null
+        ];
+        return $this->asJson($dto);
     }
 }
