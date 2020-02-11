@@ -1,6 +1,6 @@
 # Comments Work Changelog
 
-## 1.1.1
+## 1.1.5
 
 ### Added
 - NEW: new comment submit endpoint for Ajax with Json response. [More in the docs...](https://io.24hoursmedia.com/comments-work/ajax-comments)
