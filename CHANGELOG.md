@@ -1,9 +1,9 @@
 # Comments Work Changelog
 
-## Unreleased
+## 1.1.1
 
 ### Added
-- return json result from a new submit endpoint for ajax requests (actions/comments-work/default/xhr-post-comment)
+- NEW: new comment submit endpoint for Ajax with Json response. [More in the docs...](https://io.24hoursmedia.com/comments-work/ajax-comments)
 
 ## 1.1.0
 
