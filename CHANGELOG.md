@@ -1,12 +1,9 @@
 # Comments Work Changelog
 
-All notable changes to this project will be documented in this file.
+## 1.1.5
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
-
-## 1.1.8 - 2020-02-27
-### Modified
-- Updated the documentation README at the github.
+### Added
+- NEW: new comment submit endpoint for Ajax with Json response. [More in the docs...](https://io.24hoursmedia.com/comments-work/ajax-comments)
 
 ## 1.1.0
 
