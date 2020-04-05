@@ -64,6 +64,10 @@ class CommentsWork extends Plugin
      */
     public $schemaVersion = '1.0.3';
 
+    public $hasCpSettings = true;
+
+    public $hasCpSection = true;
+
     // Public Methods
     // =========================================================================
 
