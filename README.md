@@ -83,3 +83,5 @@ Read more at https://io.24hoursmedia.com/comments-work/configuration
 
 ---
 Brought to you by [24hoursmedia](https://www.24hoursmedia.com)
+
+Logo by https://www.iconfinder.com/ReactiveDoodlesApp
