@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.1.10 - 2020-04-05
+### Modified
+- Modified logo
+
 ## 1.1.9 - 2020-02-27
 ### Modified
 - Updated the readme at github
