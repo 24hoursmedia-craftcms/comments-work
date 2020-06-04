@@ -40,7 +40,7 @@ use twentyfourhoursmedia\commentswork\records\CommentRecord;
 class CommentsWorkService extends Component
 {
 
-    const EVENT_CAN_POST = 'can_post';
+    const EVENT_CAN_COMMENT = 'can_comment';
 
     // Public Methods
     // =========================================================================
@@ -50,11 +50,11 @@ class CommentsWorkService extends Component
      *
      * @param Element $element
      * @return bool
-     * @deprecated in favor of the ::canPost method
+     * @deprecated in favor of the ::canComment method
      */
     public function allowAnonymous(Element $element)
     {
-        return $this->canPost($element, null);
+        return $this->canComment($element, null);
     }
 
     /**
@@ -65,7 +65,7 @@ class CommentsWorkService extends Component
      * @param \yii\web\User|null $user
      * @return AllowedEvent
      */
-    public function canPost(ElementInterface $element, User $user = null) : AllowedInterface
+    public function canComment(ElementInterface $element, User $user = null) : AllowedInterface
     {
         $event = new AllowedEvent($element, $user);
         // set initial value to true for users, or to the default settings value for anonymous users
@@ -73,7 +73,7 @@ class CommentsWorkService extends Component
             $event->allowed = false;
             $event->message = 'Anonymous comments are not allowed';
         }
-        $this->trigger(self::EVENT_CAN_POST, $event);
+        $this->trigger(self::EVENT_CAN_COMMENT, $event);
         return $event;
     }
 

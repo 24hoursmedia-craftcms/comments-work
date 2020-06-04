@@ -66,7 +66,7 @@ class DefaultController extends Controller
         $identity = Craft::$app->getUser()->getIdentity();
 
         // check permissions
-        $check = $commentsWork->canPost($element, $identity);
+        $check = $commentsWork->canComment($element, $identity);
         if (!$check->allowed) {
             throw new BadRequestHttpException($check->message);
         }
