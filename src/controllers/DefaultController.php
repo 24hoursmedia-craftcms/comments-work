@@ -64,8 +64,11 @@ class DefaultController extends Controller
         }
 
         $identity = Craft::$app->getUser()->getIdentity();
-        if (!$identity && !$commentsWork->allowAnonymous($element)) {
-            throw new BadRequestHttpException('Anonymous posting not allowed');
+
+        // check permissions
+        $check = $commentsWork->canPost($element, $identity);
+        if (!$check->allowed) {
+            throw new BadRequestHttpException($check->message);
         }
 
         $model = $commentsWork->createModel($element, Craft::$app->getUser()->getIdentity());
