@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.1.11 - 2020-06-04
+### Added
+- You can now grant indicate wether a user is allowed to post using the event system. [More in the docs...](https://io.24hoursmedia.com/comments-work/events)
+
 ## 1.1.10 - 2020-04-05
 ### Modified
 - Modified logo
