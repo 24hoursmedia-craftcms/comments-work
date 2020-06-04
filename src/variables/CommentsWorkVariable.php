@@ -13,6 +13,7 @@ namespace twentyfourhoursmedia\commentswork\variables;
 use twentyfourhoursmedia\commentswork\CommentsWork;
 
 use Craft;
+use twentyfourhoursmedia\commentswork\services\CommentsWorkService;
 
 /**
  * Comments Work Variable
@@ -32,20 +33,14 @@ class CommentsWorkVariable
     // =========================================================================
 
     /**
-     * Whatever you want to output to a Twig template can go into a Variable method.
-     * You can have as many variable functions as you want.  From any Twig template,
-     * call it like this:
+     * Get the commentswork service from twig
      *
-     *     {{ craft.commentsWork.service }}
+     * @example
+     * {{ craft.commentsWork.service }}
      *
-     * Or, if your variable requires parameters from Twig:
-     *
-     *     {{ craft.commentsWork.exampleVariable(twigValue) }}
-     *
-     * @param null $optional
-     * @return string
+     * @return CommentsWorkService
      */
-    public function service()
+    public function service() : CommentsWorkService
     {
         return CommentsWork::$plugin->commentsWorkService;
     }

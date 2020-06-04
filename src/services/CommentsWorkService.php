@@ -11,6 +11,7 @@
 namespace twentyfourhoursmedia\commentswork\services;
 
 use craft\base\Element;
+use craft\base\ElementInterface;
 use craft\db\Query;
 use craft\elements\User;
 use twentyfourhoursmedia\commentswork\CommentsWork;
@@ -18,6 +19,8 @@ use twentyfourhoursmedia\commentswork\CommentsWork;
 use Craft;
 use craft\base\Component;
 use twentyfourhoursmedia\commentswork\elements\Comment;
+use twentyfourhoursmedia\commentswork\events\AllowedEvent;
+use twentyfourhoursmedia\commentswork\interfaces\AllowedInterface;
 use twentyfourhoursmedia\commentswork\models\CommentModel;
 use twentyfourhoursmedia\commentswork\records\CommentRecord;
 
@@ -36,23 +39,46 @@ use twentyfourhoursmedia\commentswork\records\CommentRecord;
  */
 class CommentsWorkService extends Component
 {
+
+    const EVENT_CAN_POST = 'can_post';
+
     // Public Methods
     // =========================================================================
 
     /**
      * Check if anonymous posting is enabled for an element
+     *
      * @param Element $element
      * @return bool
+     * @deprecated in favor of the ::canPost method
      */
     public function allowAnonymous(Element $element)
     {
-        return (bool)CommentsWork::$plugin->getSettings()->allowAnonymous;
+        return $this->canPost($element, null);
     }
 
+    /**
+     * Check if a user (or no user) is allowed to post a comment on an element
+     * Event listeners can override the default allowAnonymous plugin setting.
+     *
+     * @param ElementInterface $element
+     * @param \yii\web\User|null $user
+     * @return AllowedEvent
+     */
+    public function canPost(ElementInterface $element, User $user = null) : AllowedInterface
+    {
+        $event = new AllowedEvent($element, $user);
+        // set initial value to true for users, or to the default settings value for anonymous users
+        if (!$user && !(bool)CommentsWork::$plugin->getSettings()->allowAnonymous) {
+            $event->allowed = false;
+            $event->message = 'Anonymous comments are not allowed';
+        }
+        $this->trigger(self::EVENT_CAN_POST, $event);
+        return $event;
+    }
 
     public function createModel(Element $element, User $user = null)
     {
-
         $settings = CommentsWork::$plugin->getSettings();
         $autoApprove = (bool)$settings->autoApprove;
 
@@ -64,36 +90,19 @@ class CommentsWorkService extends Component
         return $model;
     }
 
-    protected function populateModelFromRecord(CommentRecord $record)
-    {
-        $model = new CommentModel();
-        $model->id = $record->id;
-        $model->siteId = $record->siteId;
-        $model->userId = $record->userId;
-        $model->elementId = $record->elementId;
-        $model->status = $record->status;
-        $model->title = $record->title;
-        $model->comment = $record->comment;
-        $model->commentFormat = $record->commentFormat;
-        $model->dateCreated = $record->dateCreated;
-        $model->user = $record->userId ? Craft::$app->getUsers()->getUserById($record->userId) : null;
-        return $model;
-    }
-
     /**
      * Saves the comment model to an element
      * Returns the saved element on success, or false otherwise.
      *
-     * @api
      * @param CommentModel $model
      * @return bool|Comment
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
+     * @api
      */
     public function saveModel(CommentModel $model)
     {
-
         $comment = new Comment();
         $comment->userId = $model->userId;
         $comment->siteId = $model->siteId;
@@ -107,10 +116,10 @@ class CommentsWorkService extends Component
     }
 
     /**
-     * @api
      * @param $elementOrelementId
      * @param array $options
      * @return int
+     * @api
      */
     public function countComments(Element $element = null, $options = [])
     {
@@ -139,12 +148,12 @@ class CommentsWorkService extends Component
     }
 
     /**
-     * @api
      * @param Element $element
      * @param int $first
      * @param int $count
      * @param array $options
      * @return array
+     * @api
      */
     public function fetchComments(Element $element, $first = 0, $count = 10, $options = [])
     {
@@ -208,53 +217,20 @@ class CommentsWorkService extends Component
         return Comment::find()->enabledForSite(false)->id($id)->commentStatus(null)->one();
     }
 
-    public function getStatusOptions()
+    public function getStatusOptions() : array
     {
         return [
             Comment::STATUS_APPROVED => Comment::STATUS_APPROVED,
             Comment::STATUS_PENDING => Comment::STATUS_PENDING,
             Comment::STATUS_SPAM => Comment::STATUS_SPAM,
             Comment::STATUS_TRASHED => Comment::STATUS_TRASHED,
-
         ];
-
-    }
-
-    const FLASHMESSAGE_KEY = '_comment_post';
-    const FLASHMESSAGE_TTL = 20; // number of seconds that a flash message stays valid
-
-    /**
-     * Create a message from a template
-     * @param array $options
-     * @return array
-     */
-    private function createFlashMessage($options = []) {
-        return array_merge([
-            'error' => null,
-            'expires' => null,
-            'status' => null
-        ], $options);
     }
 
     /**
      * Set a flash message for the user indicating success
-     * @internal
      * @param Comment $element
-     */
-    public function setSuccessFlashMessage(Comment $element)
-    {
-        $message = $this->createFlashMessage([
-            'error' => false,
-            'expires' => time() + self::FLASHMESSAGE_TTL,
-            'status' => $element->status
-        ]);
-        $session = Craft::$app->getSession()->setFlash(self::FLASHMESSAGE_KEY, $message, true);
-    }
-
-    /**
-     * Set a flash message for the user indicating success
      * @internal
-     * @param Comment $element
      */
     public function setErrorFlashMessage()
     {
@@ -285,14 +261,62 @@ class CommentsWorkService extends Component
     }
 
     /**
-     * @api
      * @return \craft\elements\db\ElementQueryInterface|\twentyfourhoursmedia\commentswork\elements\db\CommentQuery
+     * @api
      */
     public function createElementQuery()
     {
         return Comment::find();
     }
 
+    protected function populateModelFromRecord(CommentRecord $record)
+    {
+        $model = new CommentModel();
+        $model->id = $record->id;
+        $model->siteId = $record->siteId;
+        $model->userId = $record->userId;
+        $model->elementId = $record->elementId;
+        $model->status = $record->status;
+        $model->title = $record->title;
+        $model->comment = $record->comment;
+        $model->commentFormat = $record->commentFormat;
+        $model->dateCreated = $record->dateCreated;
+        $model->user = $record->userId ? Craft::$app->getUsers()->getUserById($record->userId) : null;
+        return $model;
+    }
+
+
+    const FLASHMESSAGE_KEY = '_comment_post';
+    const FLASHMESSAGE_TTL = 20; // number of seconds that a flash message stays valid
+
+    /**
+     * Create a message from a template
+     * @param array $options
+     * @return array
+     */
+    private function createFlashMessage($options = [])
+    {
+        return array_merge([
+            'error' => null,
+            'expires' => null,
+            'status' => null
+        ], $options);
+    }
+
+    /**
+     * Set a flash message for the user indicating success
+     * @param Comment $element
+     * @internal
+     */
+    public function setSuccessFlashMessage(Comment $element)
+    {
+        $message = $this->createFlashMessage([
+            'error' => false,
+            'expires' => time() + self::FLASHMESSAGE_TTL,
+            'status' => $element->status
+        ]);
+        $session = Craft::$app->getSession()->setFlash(self::FLASHMESSAGE_KEY, $message, true);
+    }
 
 
 }
