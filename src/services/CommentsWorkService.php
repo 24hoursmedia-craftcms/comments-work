@@ -54,7 +54,7 @@ class CommentsWorkService extends Component
      */
     public function allowAnonymous(Element $element)
     {
-        return $this->canComment($element, null);
+        return $this->canComment($element, null)->allowed;
     }
 
     /**

@@ -1,5 +1,12 @@
 # Comments Work Changelog
 
+## 1.1.13 - 2020-06-04
+### Added
+- You can now grant comment permissions using the event system. [More in the docs...](https://io.24hoursmedia.com/comments-work/events)
+### Fixed
+- Fix the legacy anonymous check
+
+
 ## 1.1.12 - 2020-06-04
 ### Added
 - You can now grant indicate wether a user is allowed to post using the event system. [More in the docs...](https://io.24hoursmedia.com/comments-work/events)
