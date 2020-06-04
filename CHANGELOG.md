@@ -1,6 +1,6 @@
 # Comments Work Changelog
 
-## 1.1.13 - 2020-06-04
+## 1.1.14 - 2020-06-04
 ### Added
 - You can now grant comment permissions using the event system. [More in the docs...](https://io.24hoursmedia.com/comments-work/events)
 ### Fixed
