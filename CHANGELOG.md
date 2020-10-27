@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.2.0 - 2020-10-27
+### Fixed
+- Composer 2 compatibility
+
 ## 1.1.14 - 2020-06-04
 ### Added
 - You can now grant comment permissions using the event system. [More in the docs...](https://io.24hoursmedia.com/comments-work/events)
