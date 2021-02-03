@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2018 24hoursmedia
  */
 
-namespace twentyfourhoursmedia\commentswork\assetbundles\commentsWork;
+namespace twentyfourhoursmedia\commentswork\assetbundles\commentswork;
 
 use Craft;
 use craft\web\AssetBundle;
