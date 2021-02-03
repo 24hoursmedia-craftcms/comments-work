@@ -1,6 +1,10 @@
 # Comments Work Changelog
 
-## 1.2.1 - 2021-02-3
+## 1.2.2 - 2021-02-03
+### Fixed
+- On some installations there was an error retrieving the assets in the ui (2)
+
+## 1.2.1 - 2021-02-03
 ### Fixed
 - On some installations there was an error retrieving the assets in the ui
 
