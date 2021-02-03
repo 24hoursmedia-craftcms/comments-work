@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.2.1 - 2021-02-3
+### Fixed
+- On some installations there was an error retrieving the assets in the ui
+
 ## 1.2.0 - 2020-10-27
 ### Fixed
 - Composer 2 compatibility
