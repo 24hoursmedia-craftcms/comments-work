@@ -1,5 +1,9 @@
 # Comments Work Changelog
 
+## 1.3.0 - 2021-02-23
+### Fixed
+- Improved multi-site support
+
 ## 1.2.2 - 2021-02-03
 ### Fixed
 - On some installations there was an error retrieving the assets in the ui (2)
