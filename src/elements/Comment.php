@@ -281,10 +281,11 @@ class Comment extends Element
     public function getSupportedSites(): array
     {
         $supportedSites = [];
+        // @TODO not required to get all sites, we can get just the id
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            //if($this->siteId < 1 || $this->siteId == $site->id) {
-            $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-            //}
+            if($this->siteId < 1 || $this->siteId == $site->id) {
+                $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
+            }
         }
         return $supportedSites;
     }
